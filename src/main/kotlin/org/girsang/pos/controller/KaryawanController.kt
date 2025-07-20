@@ -1,7 +1,6 @@
 package org.girsang.pos.controller
 
 import javafx.collections.FXCollections
-import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.fxml.Initializable
@@ -42,7 +41,8 @@ class KaryawanController (
     @FXML private lateinit var jenisKelaminKolom: TableColumn<Karyawan, String>
     @FXML private lateinit var jabatanKolom: TableColumn<Karyawan, Jabatan>
 
-    @FXML private lateinit var cboJabatan: ComboBox<Jabatan>
+    @FXML private lateinit var cboJabatan: ComboBox<String>
+    @FXML private lateinit var cboJKelamin: ComboBox<String>
 
     @FXML fun onMenuJabatan(){
         val loader = FXMLLoader(javaClass.getResource("/org/girsang/pos/view/jabatan.fxml"))
@@ -53,19 +53,24 @@ class KaryawanController (
         stage.scene = Scene(root)
         stage.initModality(Modality.APPLICATION_MODAL)
         stage.showAndWait()
-        loadComboBox()
+        loadData()
     }
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
         loadData()
-        loadComboBox()
     }
     private fun loadData() {
-        val karyawanList = karyawanService.findAll()
-        //karyawanTable.items = FXCollections.observableArrayList(karyawanList)
+        loadCboJabatan()
+        loadCboJKelamin()
     }
-    private fun loadComboBox() {
-        val jabatanList = jabatanService.findAll() // misalnya kembalikan List<Jabatan>
+    private fun loadCboJabatan() {
+        val jabatans = jabatanService.findAllByOrderByJabatanAsc() // misalnya kembalikan List<Jabatan>
+        val jabatanList = jabatans.map{it.jabatan}
         cboJabatan.items = FXCollections.observableArrayList(jabatanList)
         cboJabatan.selectionModel.clearSelection()
+    }
+    private fun loadCboJKelamin(){
+        val jenisKelaminList = listOf("Laki-laki", "Perempuan")
+        cboJKelamin.items = FXCollections.observableArrayList(jenisKelaminList)
+        cboJKelamin.selectionModel.clearSelection()
     }
 }

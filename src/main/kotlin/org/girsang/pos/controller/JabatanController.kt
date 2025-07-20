@@ -80,7 +80,7 @@ class JabatanController(
     }
 
     private fun loadData(){
-        val jabatans = jabatanService.findAll()
+        val jabatans = jabatanService.findAllByOrderByJabatanAsc()
         tblJabatan.items = FXCollections.observableArrayList(jabatans)
         tblJabatan.selectionModel.clearSelection()
         jabatanTxt.clear()
